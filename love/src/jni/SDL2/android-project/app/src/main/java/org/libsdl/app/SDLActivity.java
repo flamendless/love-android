@@ -1362,7 +1362,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             buttonSelectedColor = colors[++i];
         } else {
             backgroundColor = Color.TRANSPARENT;
-            textColor = Color.TRANSPARENT;
+            textColor = Color.BLACK;
             buttonBorderColor = Color.TRANSPARENT;
             buttonBackgroundColor = Color.TRANSPARENT;
             buttonSelectedColor = Color.TRANSPARENT;

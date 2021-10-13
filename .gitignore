@@ -31,3 +31,5 @@ build
 # love-android specific
 !app/src/main/assets/
 app/src/main/assets/game.love
+
+*.keystore
