@@ -15,7 +15,7 @@
       android:hardwareAccelerated="true"
       tools:node="replace" >
       <activity
-        android:name="org.love2d.android.GameActivity"
+        android:name="org.flamendless.admob.AdActivity"
         android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
         android:label="LÖVE for Android"
         android:launchMode="singleTask"
@@ -31,5 +31,12 @@
           <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
         </intent-filter>
       </activity>
+
+      <meta-data android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+
+      <meta-data
+        android:name="com.google.android.gms.ads.APPLICATION_ID"
+        android:value="YOU_APP_ID_HERE" />
     </application>
 </manifest>

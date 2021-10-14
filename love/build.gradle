@@ -81,7 +81,8 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api 'androidx.appcompat:appcompat:1.2.0'
+
     api 'com.google.android.gms:play-services-ads:18.3.0'
     implementation 'com.google.code.gson:gson:2.8.4'
-    api(name:'consent-library', ext:'aar')
+    implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
 }

@@ -17,3 +17,7 @@
 #}
 
 -keep class org.love2d.android.GameActivity { *; }
+
+-keepclassmembers class org.love2d.android.GameActivity {
+   public com.naef.jnlua.LuaState createLuaState();
+}

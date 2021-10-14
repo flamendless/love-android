@@ -1,13 +1,17 @@
-package org.love2d.android;
+package org.flamendless.admob;
 
 import org.love2d.android.GameActivity;
+
 import com.google.android.gms.ads.reward.*;
 import com.google.android.gms.ads.*; // import library
 import com.google.android.gms.ads.MobileAds;
 import com.google.ads.mediation.admob.AdMobAdapter;
-import com.google.ads.consent.*;
 
-
+import com.google.android.ump.ConsentForm;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.FormError;
+import com.google.android.ump.UserMessagingPlatform;
 
 import java.util.List;
 import java.io.BufferedInputStream;
@@ -60,13 +64,15 @@ import java.lang.Thread;
 
 public class AdActivity extends GameActivity {
 
-	private String appID = "ca-app-pub-3940256099942544~3347511713";
+	private String appID = "";
 	private boolean fullscreen = false; //CONFIG for banner
 	private boolean collectConsent = true; //CONFIG for GPDR consent
 	private String publisherID = "pub-3940256099942544"; //For consent (Like "pub-3940256099942544")
-	private String privacyURL = "http://YOUR-PRIVACY-POLICY-URL.com"; // For consent
-	private List<String> testDeviceIds = Arrays.asList("ADA731604F5401EE072CB80DD9459283");
+	private String privacyURL = "https://www.google.com/about/company/user-consent-policy/"; // For consent
+	private List<String> testDeviceIds = Arrays.asList("");
+
 	//REMEMBER TO SET UP YOUR TEST DEVICE ID!
+	//
 	//TO UNHIDE THE STATUS BAR, OPEN SDLACTIVITY.JAVA AND UNCOMMENT THE LINES 423 AND 425 (setWindowStyle(false); AND getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(this);)
 
 	private AdRequest adRequest;
@@ -80,7 +86,7 @@ public class AdActivity extends GameActivity {
 	private boolean bannerHasFinishedLoading = false;
 	private boolean bannerCreated = false;
 	private String bannerPosition;
-	private String bannerAdID = "TOP_SECRET";
+	private String bannerAdID = "";
 
 	//Interstitial stuff
 	private InterstitialAd mInterstitialAd;
@@ -102,11 +108,29 @@ public class AdActivity extends GameActivity {
 	private double rewardQty;
 	private String rewardType;
 
+    private ConsentInformation consentInformation;
+    private ConsentForm consentForm;
 
-
-	private ConsentForm consentForm;
 	private void displayConsentForm() {
 		Log.d("AdActivity","displayConsentForm()");
+
+		UserMessagingPlatform.loadConsentForm(
+			this,
+			new UserMessagingPlatform.OnConsentFormLoadSuccessListener() {
+				@Override
+				public void onConsentFormLoadSuccess(ConsentForm cf) {
+					consentForm = cf;
+				}
+			},
+			new UserMessagingPlatform.OnConsentFormLoadFailureListener() {
+				@Override
+				public void onConsentFormLoadFailure(FormError formError) {
+				// Handle the error
+				}
+			}
+		);
+
+		/*
         consentForm = new ConsentForm.Builder(AdActivity.this, getAppsPrivacyPolicy())
                 .withListener(new ConsentFormListener() {
                     @Override
@@ -138,6 +162,7 @@ public class AdActivity extends GameActivity {
                 .withNonPersonalizedAdsOption()
                 .build();
         consentForm.load();
+        */
     }
 
 	private URL getAppsPrivacyPolicy() {
@@ -217,8 +242,30 @@ public class AdActivity extends GameActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		// Set tag for underage of consent. false means users are not underage.
+		/*
+		ConsentRequestParameters params = new ConsentRequestParameters
+			.Builder()
+			.setTagForUnderAgeOfConsent(false)
+			.build();
 
-		//CONSENY
+		consentInformation = UserMessagingPlatform.getConsentInformation(this);
+		consentInformation.requestConsentInfoUpdate(
+			this, params,
+			new ConsentInformation.OnConsentInfoUpdateSuccessListener() {
+				@Override
+				public void onConsentInfoUpdateSuccess() {
+				}
+			},
+			new ConsentInformation.OnConsentInfoUpdateFailureListener() {
+				@Override
+				public void onConsentInfoUpdateFailure(FormError formError) {
+				}
+			});
+		*/
+
+		/*
+		//CONSENT
 		if (collectConsent)
 		{
 			ConsentInformation consentInformation = ConsentInformation.getInstance(AdActivity.this);
@@ -246,6 +293,7 @@ public class AdActivity extends GameActivity {
 			});
 		}
 		//END CONSENT
+		*/
 
 		if (appID.equals("INSERT-YOUR-APP-ID-HERE"))
 		{
@@ -264,7 +312,6 @@ public class AdActivity extends GameActivity {
 
 		createRewardedVideo();
 	}
-
 
 
 	@Override
@@ -807,9 +854,3 @@ public class AdActivity extends GameActivity {
 		 return sw.getBuffer().toString();
 	}
 }
-
-
-
-
-
-

@@ -51,7 +51,7 @@ import androidx.core.app.ActivityCompat;
 public class GameActivity extends SDLActivity {
     private static DisplayMetrics metrics = new DisplayMetrics();
     private static String gamePath = "";
-    private static Context context;
+    public static Context context;
     private static Vibrator vibrator = null;
     protected final int[] externalStorageRequestDummy = new int[1];
     protected final int[] recordAudioRequestDummy = new int[1];
