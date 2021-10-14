@@ -4,6 +4,16 @@ Based off from [love2d-admob-android](https://bitbucket.org/bio1712/love2d-admob
 
 Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
 
+
+## MODIFICATION
+
+Use the [admob branch of love](https://github.com/flamendless/love/tree/admob).
+Any changes in the boot.lua, run
+```
+cd love/src/jni/love/src/scripts/
+lua auto.lua boot
+```
+
 ## CHANGES
 
 * Updated to love 11.3
