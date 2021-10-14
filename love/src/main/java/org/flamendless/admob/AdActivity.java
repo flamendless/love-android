@@ -86,7 +86,7 @@ public class AdActivity extends GameActivity {
 	private boolean bannerHasFinishedLoading = false;
 	private boolean bannerCreated = false;
 	private String bannerPosition;
-	private String bannerAdID = "";
+	private String bannerAdID = ""; //no need to set
 
 	//Interstitial stuff
 	private InterstitialAd mInterstitialAd;
