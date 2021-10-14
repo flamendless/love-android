@@ -1,3 +1,16 @@
+# ADMOB-COMPATIBLE LOVE-ANDROID
+
+Based off from [love2d-admob-android](https://bitbucket.org/bio1712/love2d-admob-android/src/master/)
+
+Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
+
+## CHANGES
+
+* Updated to love 11.3
+* Use User Messaging Platform for EU Consent instead of the depracated consent-sdk
+
+---
+
 Android Port of LÖVE, an awesome 2D game engine for Lua (http://love2d.org)  
 Copyright (c) 2006-2020 LOVE Development Team
 
