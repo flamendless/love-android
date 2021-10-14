@@ -7,7 +7,7 @@ Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
 ## CHANGES
 
 * Updated to love 11.3
-* Use User Messaging Platform for EU Consent instead of the depracated consent-sdk
+* Use User Messaging Platform for EU Consent instead of the deprecated consent-sdk
 
 ---
 

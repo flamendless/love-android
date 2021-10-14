@@ -1,3 +1,4 @@
 [submodule "love/src/jni/love"]
 	path = love/src/jni/love
-	url = https://github.com/love2d/love
+	url = https://github.com/flamendless/love
+	branch = admob
