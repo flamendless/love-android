@@ -22,6 +22,17 @@ package org.love2d.android;
 
 import org.libsdl.app.SDLActivity;
 
+import com.google.android.gms.ads.reward.*;
+import com.google.android.gms.ads.*; // import library
+import com.google.android.gms.ads.MobileAds;
+import com.google.ads.mediation.admob.AdMobAdapter;
+
+import com.google.android.ump.ConsentForm;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.FormError;
+import com.google.android.ump.UserMessagingPlatform;
+
 import java.util.List;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -525,17 +536,17 @@ public class GameActivity extends SDLActivity {
 
     @Keep
     public boolean initializeSafeArea() {
-        if (android.os.Build.VERSION.SDK_INT >= 28 && shortEdgesMode) {
-            DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
-
-            if (cutout != null) {
-                safeAreaTop = cutout.getSafeInsetTop();
-                safeAreaLeft = cutout.getSafeInsetLeft();
-                safeAreaBottom = cutout.getSafeInsetBottom();
-                safeAreaRight = cutout.getSafeInsetRight();
-                return true;
-            }
-        }
+        // if (android.os.Build.VERSION.SDK_INT >= 28 && shortEdgesMode) {
+        //     DisplayCutout cutout = getWindow().getDecorView().getRootWindowInsets().getDisplayCutout();
+        //
+        //     if (cutout != null) {
+        //         safeAreaTop = cutout.getSafeInsetTop();
+        //         safeAreaLeft = cutout.getSafeInsetLeft();
+        //         safeAreaBottom = cutout.getSafeInsetBottom();
+        //         safeAreaRight = cutout.getSafeInsetRight();
+        //         return true;
+        //     }
+        // }
 
         return false;
     }
