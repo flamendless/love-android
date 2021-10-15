@@ -4,6 +4,12 @@ Based off from [love2d-admob-android](https://bitbucket.org/bio1712/love2d-admob
 
 Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
 
+## INSTRUCTIONS
+
+* Put your APP ID in `app/src/embed/AndroidManifest.xml` at line `47` and in `love/src/main/java/org/flamendless/admob/AdActivity.java` at line `67`
+* Put your Publisher ID in `love/src/main/java/org/flamendless/admob/AdActivity.java` at line `70`
+* Put your Privacy URL (optional) in `love/src/main/java/org/flamendless/admob/AdActivity.java` at line `71`
+* Put your testDeviceIds in `love/src/main/java/org/flamendless/admob/AdActivity.java` at line `72`
 
 ## MODIFICATION
 

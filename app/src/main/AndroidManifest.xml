@@ -92,5 +92,11 @@
             android:pathPattern=".*\\.love" />
         </intent-filter>
       </activity>
+
+      <activity
+        android:name="com.google.android.gms.ads.AdActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+        android:exported="false">
+      </activity>
     </application>
 </manifest>
