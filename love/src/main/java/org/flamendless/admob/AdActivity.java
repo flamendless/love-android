@@ -1,5 +1,6 @@
 package org.flamendless.admob;
 
+import org.love2d.android.BuildConfig;
 import org.love2d.android.GameActivity;
 
 import com.google.android.gms.ads.reward.*;
@@ -64,12 +65,12 @@ import java.lang.Thread;
 
 public class AdActivity extends GameActivity {
 
-	private String appID = "";
+	private String appID = BuildConfig.APPLICATION_ID;
 	private boolean fullscreen = false; //CONFIG for banner
 	private boolean collectConsent = true; //CONFIG for GPDR consent
-	private String publisherID = "pub-3940256099942544"; //For consent (Like "pub-3940256099942544")
-	private String privacyURL = "https://www.google.com/about/company/user-consent-policy/"; // For consent
-	private List<String> testDeviceIds = Arrays.asList("");
+	private String publisherID = BuildConfig.PUBLISHER_ID; //For consent (Like "pub-3940256099942544")
+	private String privacyURL = BuildConfig.PRIVACY_URL; // For consent
+	private List<String> testDeviceIds = Arrays.asList(BuildConfig.TEST_DEVICE_ID); //no dash and all uppercase format
 
 	//REMEMBER TO SET UP YOUR TEST DEVICE ID!
 	//

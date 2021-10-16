@@ -5,12 +5,19 @@ android {
     buildToolsVersion '30.0.2'
     ndkVersion '21.3.6528147'
     defaultConfig {
-        applicationId 'org.love2d.android'
-        versionCode 29
-        versionName '11.3a'
-        // minSdkVersion 14
+        applicationId 'org.flamendless.anagramer'
+        versionCode 1
+        versionName '2a'
         minSdkVersion 16 //required by User Messaging Platform
         targetSdkVersion 30
+
+        apply from: "../config.gradle"
+        manifestPlaceholders = [
+            NAME:project.NAME,
+            ACTIVITY_NAME:project.ACTIVITY_NAME,
+            ORIENTATION:project.ORIENTATION,
+            APPLICATION_ID:project.APPLICATION_ID,
+        ]
     }
     buildTypes {
         release {

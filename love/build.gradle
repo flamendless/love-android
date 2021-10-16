@@ -26,6 +26,12 @@ android {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
         targetSdkVersion 30
+
+        apply from: "../config.gradle"
+        buildConfigField("String", "APPLICATION_ID", "\"${project.APPLICATION_ID}\"")
+        buildConfigField("String", "PUBLISHER_ID", "\"${project.PUBLISHER_ID}\"")
+        buildConfigField("String", "PRIVACY_URL", "\"${project.PRIVACY_URL}\"")
+        buildConfigField("String", "TEST_DEVICE_ID", "\"${project.TEST_DEVICE_ID}\"")
     }
     buildTypes {
         release {
