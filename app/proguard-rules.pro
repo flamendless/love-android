@@ -17,6 +17,7 @@
 #}
 
 -keep class org.love2d.android.GameActivity { *; }
+-keep class org.libsdl.app.** { *; }
 -keep class org.flamendless.admob.AdActivity { *; }
 
 -keepclassmembers class org.love2d.android.GameActivity {

@@ -11,6 +11,7 @@ import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentInformation;
 import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.ConsentDebugSettings;
 import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
 
@@ -67,7 +68,7 @@ public class AdActivity extends GameActivity {
 
 	private String appID = BuildConfig.APPLICATION_ID;
 	private boolean fullscreen = false; //CONFIG for banner
-	private boolean collectConsent = true; //CONFIG for GPDR consent
+	private boolean collectConsent = BuildConfig.COLLECT_CONSENT; //CONFIG for GPDR consent
 	private String publisherID = BuildConfig.PUBLISHER_ID; //For consent (Like "pub-3940256099942544")
 	private String privacyURL = BuildConfig.PRIVACY_URL; // For consent
 	private List<String> testDeviceIds = Arrays.asList(BuildConfig.TEST_DEVICE_ID); //no dash and all uppercase format
@@ -109,62 +110,9 @@ public class AdActivity extends GameActivity {
 	private double rewardQty;
 	private String rewardType;
 
-    private ConsentInformation consentInformation;
-    private ConsentForm consentForm;
-
-	private void displayConsentForm() {
-		Log.d("AdActivity","displayConsentForm()");
-
-		UserMessagingPlatform.loadConsentForm(
-			this,
-			new UserMessagingPlatform.OnConsentFormLoadSuccessListener() {
-				@Override
-				public void onConsentFormLoadSuccess(ConsentForm cf) {
-					consentForm = cf;
-				}
-			},
-			new UserMessagingPlatform.OnConsentFormLoadFailureListener() {
-				@Override
-				public void onConsentFormLoadFailure(FormError formError) {
-				// Handle the error
-				}
-			}
-		);
-
-		/*
-        consentForm = new ConsentForm.Builder(AdActivity.this, getAppsPrivacyPolicy())
-                .withListener(new ConsentFormListener() {
-                    @Override
-                    public void onConsentFormLoaded() {
-                        // Display Consent Form When Its Loaded
-                        consentForm.show();
-                    }
-
-                    @Override
-                    public void onConsentFormOpened() {
-
-                    }
-
-                    @Override
-                    public void onConsentFormClosed(
-                            ConsentStatus consentStatus, Boolean userPrefersAdFree) {
-                        // Consent form is closed. From this method you can decided to display PERSONLIZED ads or NON-PERSONALIZED ads based on consentStatus.
-                        Log.d("AdActivity","Consent Status : " + consentStatus);
-                    }
-
-                    @Override
-                    public void onConsentFormError(String errorDescription) {
-                        // Consent form error.
-                        Log.d("AdActivity","onConsentFormError: " + errorDescription);
-
-                    }
-                })
-                .withPersonalizedAdsOption()
-                .withNonPersonalizedAdsOption()
-                .build();
-        consentForm.load();
-        */
-    }
+	//Consents
+	private ConsentInformation consentInformation;
+	private ConsentForm consentForm;
 
 	private URL getAppsPrivacyPolicy() {
         URL mUrl = null;
@@ -176,7 +124,6 @@ public class AdActivity extends GameActivity {
         }
         return mUrl;
     }
-
 
 	public void createRewardedVideo()
 	{
@@ -232,69 +179,88 @@ public class AdActivity extends GameActivity {
 			@Override
 			public void onRewardedVideoCompleted()
 			{
-
 			}
-
 		});
 	}
 
+	private void displayConsentForm() {
+		Log.i("AdActivity","displayConsentForm()");
+		loadForm();
+	}
+
+	public void loadForm() {
+		UserMessagingPlatform.loadConsentForm(
+			this,
+			new UserMessagingPlatform.OnConsentFormLoadSuccessListener() {
+				@Override
+				public void onConsentFormLoadSuccess(ConsentForm cf) {
+					consentForm = cf;
+					Log.i("Consent","form load success: " + consentInformation.getConsentStatus());
+					if (consentInformation.getConsentStatus() == ConsentInformation.ConsentStatus.REQUIRED) {
+						consentForm.show(
+							AdActivity.this,
+							new ConsentForm.OnConsentFormDismissedListener() {
+								@Override
+								public void onConsentFormDismissed(FormError formError) {
+									adExtras.putString("npa", "1");
+									// loadForm();
+								}
+							}
+						);
+					}
+				}
+			},
+
+			new UserMessagingPlatform.OnConsentFormLoadFailureListener() {
+				@Override
+				public void onConsentFormLoadFailure(FormError formError) {
+					// Handle the error
+					Log.i("Consent","form load failure: " + formError.getMessage());
+				}
+			}
+		);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Set tag for underage of consent. false means users are not underage.
-		/*
-		ConsentRequestParameters params = new ConsentRequestParameters
-			.Builder()
-			.setTagForUnderAgeOfConsent(false)
-			.build();
+		Log.i("Consent", "collecting consent: " + String.valueOf(collectConsent));
+		if (collectConsent) {
+			//for location
+			ConsentDebugSettings debugSettings = new ConsentDebugSettings.Builder(this)
+				.setDebugGeography(ConsentDebugSettings
+				.DebugGeography
+				.DEBUG_GEOGRAPHY_EEA)
+				.addTestDeviceHashedId(BuildConfig.TEST_DEVICE_ID)
+				.build();
 
-		consentInformation = UserMessagingPlatform.getConsentInformation(this);
-		consentInformation.requestConsentInfoUpdate(
-			this, params,
-			new ConsentInformation.OnConsentInfoUpdateSuccessListener() {
-				@Override
-				public void onConsentInfoUpdateSuccess() {
-				}
-			},
-			new ConsentInformation.OnConsentInfoUpdateFailureListener() {
-				@Override
-				public void onConsentInfoUpdateFailure(FormError formError) {
-				}
-			});
-		*/
+			// Set tag for underage of consent. false means users are not underage.
+			ConsentRequestParameters params = new ConsentRequestParameters
+				.Builder()
+				.setConsentDebugSettings(debugSettings)
+				.setTagForUnderAgeOfConsent(false)
+				.build();
 
-		/*
-		//CONSENT
-		if (collectConsent)
-		{
-			ConsentInformation consentInformation = ConsentInformation.getInstance(AdActivity.this);
-			String[] publisherIds = {publisherID};
-			consentInformation.requestConsentInfoUpdate(publisherIds, new ConsentInfoUpdateListener() {
-				@Override
-				public void onConsentInfoUpdated(ConsentStatus consentStatus) {
-					 // User's consent status successfully updated.
-					if (consentStatus == ConsentStatus.NON_PERSONALIZED) {
-						adExtras = new Bundle();
-						adExtras.putString("npa", "1");
-					} else if (consentStatus == ConsentStatus.PERSONALIZED) {
-						adExtras = new Bundle();
-					} else if (consentStatus == ConsentStatus.UNKNOWN) {
-						displayConsentForm();
+			consentInformation = UserMessagingPlatform.getConsentInformation(this);
+			consentInformation.requestConsentInfoUpdate(
+				this, params,
+				new ConsentInformation.OnConsentInfoUpdateSuccessListener() {
+					@Override
+					public void onConsentInfoUpdateSuccess() {
+						Log.i("Consent", "info update success: " + String.valueOf(consentInformation.isConsentFormAvailable()));
+						if (consentInformation.isConsentFormAvailable()) {
+							loadForm();
+						}
 					}
-					Log.d("AdActivity","onConsentInfoUpdated");
-				}
-
-				@Override
-				public void onFailedToUpdateConsentInfo(String errorDescription) {
-					 // User's consent status failed to update.
-					 Log.e("AdActivity","onFailedToUpdateConsentInfo: " + errorDescription);
-				}
-			});
+				},
+				new ConsentInformation.OnConsentInfoUpdateFailureListener() {
+					@Override
+					public void onConsentInfoUpdateFailure(FormError formError) {
+						Log.i("Consent", "info update failure: "  + formError.getMessage());
+					}
+				});
 		}
-		//END CONSENT
-		*/
 
 		if (appID.equals("INSERT-YOUR-APP-ID-HERE"))
 		{
@@ -377,8 +343,8 @@ public class AdActivity extends GameActivity {
 						adRequestBuilder.addTestDevice(s);
 					}
 					adRequest = adRequestBuilder
-					.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
-					.build();
+						.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
+						.build();
 					mAdView.loadAd(adRequest);
 
 					adContainer = new RelativeLayout(mSingleton);
@@ -655,8 +621,8 @@ public class AdActivity extends GameActivity {
 				}
 
 				mRewardedAd.loadAd(adID, adRequestBuilder
-				.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
-				.build());
+					.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
+					.build());
 			}
 		});
 

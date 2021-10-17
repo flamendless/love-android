@@ -16,6 +16,7 @@ project.ext.APPLICATION_ID = "ca-app-pub-xxxx"
 project.ext.PUBLISHER_ID = "pub-xxxx"
 project.ext.PRIVACY_URL = "https://www.google.com/about/company/user-consent-policy/"
 project.ext.TEST_DEVICE_ID = "XXXX"
+project.ext.COLLECT_CONSENT = true
 ```
 
 Modify the `applicationId`, `versionName`, and `versionCode` in `app/build.gradle`

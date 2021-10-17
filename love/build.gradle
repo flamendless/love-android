@@ -32,6 +32,7 @@ android {
         buildConfigField("String", "PUBLISHER_ID", "\"${project.PUBLISHER_ID}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${project.PRIVACY_URL}\"")
         buildConfigField("String", "TEST_DEVICE_ID", "\"${project.TEST_DEVICE_ID}\"")
+        buildConfigField("boolean", "COLLECT_CONSENT", "${project.COLLECT_CONSENT}")
     }
     buildTypes {
         release {
