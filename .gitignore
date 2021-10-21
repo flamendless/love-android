@@ -33,4 +33,3 @@ build
 app/src/main/assets/game.love
 
 *.keystore
-config.gradle

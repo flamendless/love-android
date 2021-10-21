@@ -11,12 +11,11 @@ android {
         minSdkVersion 16 //required by User Messaging Platform
         targetSdkVersion 30
 
-        apply from: "../config.gradle"
         manifestPlaceholders = [
-            NAME:project.NAME,
-            ACTIVITY_NAME:project.ACTIVITY_NAME,
-            ORIENTATION:project.ORIENTATION,
-            APPLICATION_ID:project.APPLICATION_ID,
+            NAME:project.properties["app.name"],
+            ACTIVITY_NAME:project.properties["app.activity_name"],
+            ORIENTATION:project.properties["app.orientation"],
+            APPLICATION_ID:project.properties["admob.app_id"],
         ]
     }
     buildTypes {
@@ -49,7 +48,10 @@ dependencies {
     api 'androidx.appcompat:appcompat:1.2.0'
     api project(':love')
 
-    api 'com.google.android.gms:play-services-ads:18.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
+    if (project.hasProperty("flamendless.admob"))
+    {
+        api 'com.google.android.gms:play-services-ads:18.3.0'
+        implementation 'com.google.code.gson:gson:2.8.4'
+        implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
+    }
 }

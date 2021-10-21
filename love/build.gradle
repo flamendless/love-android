@@ -28,12 +28,11 @@ android {
         }
         targetSdkVersion 30
 
-        apply from: "../config.gradle"
-        buildConfigField("String", "APPLICATION_ID", "\"${project.APPLICATION_ID}\"")
-        buildConfigField("String", "PUBLISHER_ID", "\"${project.PUBLISHER_ID}\"")
-        buildConfigField("String", "PRIVACY_URL", "\"${project.PRIVACY_URL}\"")
-        buildConfigField("String", "TEST_DEVICE_ID", "\"${project.TEST_DEVICE_ID}\"")
-        buildConfigField("boolean", "COLLECT_CONSENT", "${project.COLLECT_CONSENT}")
+        buildConfigField("String", "APPLICATION_ID", "\"${project.properties['admob.app_id']}\"")
+        buildConfigField("String", "PUBLISHER_ID", "\"${project.properties['admob.publisher_id']}\"")
+        buildConfigField("String", "PRIVACY_URL", "\"${project.properties['admob.privacy_url']}\"")
+        buildConfigField("String", "TEST_DEVICE_ID", "\"${project.properties['admob.test_device_id']}\"")
+        buildConfigField("boolean", "COLLECT_CONSENT", "${project.properties['admob.collect_consent']}")
     }
     buildTypes {
         release {
@@ -90,7 +89,10 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     api 'androidx.appcompat:appcompat:1.2.0'
 
-    api 'com.google.android.gms:play-services-ads:18.3.0'
-    implementation 'com.google.code.gson:gson:2.8.4'
-    implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
+    if (project.hasProperty("flamendless.admob"))
+    {
+        api 'com.google.android.gms:play-services-ads:18.3.0'
+        implementation 'com.google.code.gson:gson:2.8.4'
+        implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
+    }
 }
