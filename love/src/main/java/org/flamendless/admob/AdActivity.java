@@ -229,9 +229,7 @@ public class AdActivity extends GameActivity {
 		if (collectConsent) {
 			//for location
 			ConsentDebugSettings debugSettings = new ConsentDebugSettings.Builder(this)
-				.setDebugGeography(ConsentDebugSettings
-				.DebugGeography
-				.DEBUG_GEOGRAPHY_EEA)
+				.setDebugGeography(ConsentDebugSettings.DebugGeography.DEBUG_GEOGRAPHY_EEA)
 				.addTestDeviceHashedId(BuildConfig.TEST_DEVICE_ID)
 				.build();
 
@@ -243,6 +241,8 @@ public class AdActivity extends GameActivity {
 				.build();
 
 			consentInformation = UserMessagingPlatform.getConsentInformation(this);
+			consentInformation.reset();
+
 			consentInformation.requestConsentInfoUpdate(
 				this, params,
 				new ConsentInformation.OnConsentInfoUpdateSuccessListener() {
@@ -258,6 +258,7 @@ public class AdActivity extends GameActivity {
 					@Override
 					public void onConsentInfoUpdateFailure(FormError formError) {
 						Log.i("Consent", "info update failure: "  + formError.getMessage());
+						Log.i("Consent", "error code: "  + formError.getErrorCode());
 					}
 				});
 		}
