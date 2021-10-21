@@ -39,16 +39,27 @@ function love.conf(t)
 end
 ```
 
+Then in your game, you can require the module using `local admob = require("admob")`
+
+Finally you can override methods and callbacks, note that the `update` is required.
+See [love_admob.lua](https://github.com/flamendless/Anagramer/blob/master/modules/love_admob.lua).
+
+#### Option 1
 You need to provide your own `love.run` method and add this
 ```lua
 if love_admob then love_admob.update(dt) end --this
 if love.timer then love.timer.sleep(0.001) end --just above this
 ```
 
-Then in your game, you can require the module using `local admob = require("admob")`
-
-Finally you can override methods and callbacks, note that the `update` is required.
-See [love_admob.lua](https://github.com/flamendless/Anagramer/blob/master/modules/love_admob.lua).
+### Option 2
+If you do not want to provide your own `love.run`, you can easily just call
+`admob.update(dt)` in your `love.update`:
+```lua
+function love.update(dt)
+	admob.update(dt)
+	--more of your codes
+end
+```
 
 ## CHANGES
 
