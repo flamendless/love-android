@@ -28,20 +28,7 @@ Modify the `applicationId`, `versionName`, and `versionCode` in `app/build.gradl
 
 For an example, look up [Anagramer](https://github.com/flamendless/anagramer)
 
-In your love project, load the `ads` module to in `conf.lua` as such:
-```lua
-function love.conf(t)
-	t.modules = {
-		ads = true,
-		--dont forget to set all other modules to true as well
-		timer = true,
-		window = true,
-		--and so on
-	}
-end
-```
-
-Then in your game, you can require the module using `local admob = require("admob")`
+In your game, you can require the module using `local admob = require("admob")`
 
 Finally you can override methods and callbacks, note that the `update` is required.
 See [love_admob.lua](https://github.com/flamendless/Anagramer/blob/master/modules/love_admob.lua).
