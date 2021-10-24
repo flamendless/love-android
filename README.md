@@ -1,10 +1,20 @@
-# ADMOB-COMPATIBLE LOVE-ANDROID
+# ANDROID EXTENSIONS FOR LOVE-ANDROID
+
+Uses [love android extensions fork](https://github.com/flamendless/love)
+
+## EXTENSIONS
+
+* AdMob
+
+---
+
+### ADMOB
 
 Based off from [love2d-admob-android](https://bitbucket.org/bio1712/love2d-admob-android/src/master/)
 
 Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
 
-## INSTRUCTIONS
+#### INSTRUCTIONS
 
 Add to `gradle.properties` the following (modify according to your data):
 ```
@@ -24,7 +34,7 @@ admob.collect_consent=true
 Modify the `applicationId`, `versionName`, and `versionCode` in `app/build.gradle`
 
 
-### Usage with LVOE
+#### Usage with LVOE
 
 For an example, look up [Anagramer](https://github.com/flamendless/anagramer)
 
@@ -33,14 +43,14 @@ In your game, you can require the module using `local admob = require("admob")`
 Finally you can override methods and callbacks, note that the `update` is required.
 See [love_admob.lua](https://github.com/flamendless/Anagramer/blob/master/modules/love_admob.lua).
 
-#### Option 1
+##### Option 1
 You need to provide your own `love.run` method and add this
 ```lua
 if love_admob then love_admob.update(dt) end --this
 if love.timer then love.timer.sleep(0.001) end --just above this
 ```
 
-### Option 2
+##### Option 2
 If you do not want to provide your own `love.run`, you can easily just call
 `admob.update(dt)` in your `love.update`:
 ```lua
@@ -49,6 +59,8 @@ function love.update(dt)
 	--more of your codes
 end
 ```
+
+---
 
 ## CHANGES
 
