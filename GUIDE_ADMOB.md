@@ -2,7 +2,7 @@
 
 Based off from [love2d-admob-android](https://bitbucket.org/bio1712/love2d-admob-android/src/master/)
 
-Read guide [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
+Read original post/thread [here](https://love2d.org/forums/viewtopic.php?f=5&t=84226)
 
 ## INSTRUCTIONS
 
