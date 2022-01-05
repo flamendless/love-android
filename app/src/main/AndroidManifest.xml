@@ -25,16 +25,6 @@
   <application
       android:allowBackup="true"
       android:icon="@drawable/love"
-<<<<<<< HEAD
-      android:label="LOVE for Android"
-      android:usesCleartextTraffic="true"
-      android:hardwareAccelerated="true" >
-      <service android:name="org.love2d.android.DownloadService" />
-      <activity
-        android:name="org.love2d.android.GameActivity"
-        android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-        android:label="LOVE for Android"
-=======
       android:label="LÖVE for Android"
       android:usesCleartextTraffic="true" >
     <activity
@@ -42,12 +32,10 @@
         android:exported="true"
         android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
         android:label="LÖVE for Android"
->>>>>>> b367b3733d32e1ea734d8f1215d94cb6c88fc0c4
         android:launchMode="singleTask"
         android:screenOrientation="landscape"
         android:resizeableActivity="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
-<<<<<<< HEAD
         <intent-filter>
           <action android:name="android.intent.action.MAIN" />
           <category android:name="android.intent.category.LAUNCHER" />
@@ -56,54 +44,9 @@
         <intent-filter>
           <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
         </intent-filter>
-        <intent-filter>
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="file" />
-          <data android:mimeType="*/*" />
-          <data android:pathPattern=".*\\.love" />
-          <data android:host="*" />
-        </intent-filter>
-        <intent-filter>
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="content" />
-          <data android:mimeType="application/x-love-game" />
-        </intent-filter>
-        <intent-filter>
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="content" />
-          <data android:mimeType="application/octet-stream" />
-        </intent-filter>
-        <intent-filter>
-          <action android:name="android.intent.action.SEND" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <data android:mimeType="application/*" />
-        </intent-filter>
-      </activity>
-      <activity
-        android:name="org.love2d.android.DownloadActivity"
-        android:noHistory="true"
-        android:theme="@android:style/Theme.NoTitleBar" >
-        <intent-filter>
-          <action android:name="android.intent.action.VIEW" />
-          <category android:name="android.intent.category.DEFAULT" />
-          <category android:name="android.intent.category.BROWSABLE" />
-          <data android:scheme="http"
-            android:host="*"
-            android:mimeType="*/*"
-            android:pathPattern=".*\\.love" />
-          <data android:scheme="https"
-            android:host="*"
-            android:mimeType="*/*"
-            android:pathPattern=".*\\.love" />
-        </intent-filter>
       </activity>
 
+      <!--Needed by AdMob-->
       <activity
         android:name="com.google.android.gms.ads.AdActivity"
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
@@ -111,16 +54,3 @@
       </activity>
     </application>
 </manifest>
-=======
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-        <category android:name="tv.ouya.intent.category.GAME" />
-      </intent-filter>
-      <intent-filter>
-        <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-      </intent-filter>
-    </activity>
-  </application>
-</manifest> 
->>>>>>> b367b3733d32e1ea734d8f1215d94cb6c88fc0c4
