@@ -18,6 +18,7 @@
 
 -keep class org.love2d.android.GameActivity { *; }
 -keep class org.libsdl.app.** { *; }
+<<<<<<< HEAD
 -keep class org.flamendless.admob.AdActivity { *; }
 
 -keepclassmembers class org.love2d.android.GameActivity {
@@ -27,3 +28,5 @@
 -keepclassmembers class org.flamendless.admob.AdActivity {
    public com.naef.jnlua.LuaState createLuaState();
 }
+=======
+>>>>>>> b367b3733d32e1ea734d8f1215d94cb6c88fc0c4

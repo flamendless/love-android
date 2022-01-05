@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.love2d.android.executable"
-  android:installLocation="auto" xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest
+    package="org.love2d.android.executable"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.BLUETOOTH" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
-  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
-  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
 
   <!-- OpenGL ES 2.0 -->
   <uses-feature android:glEsVersion="0x00020000" />
@@ -25,6 +25,7 @@
   <application
       android:allowBackup="true"
       android:icon="@drawable/love"
+<<<<<<< HEAD
       android:label="LOVE for Android"
       android:usesCleartextTraffic="true"
       android:hardwareAccelerated="true" >
@@ -33,10 +34,20 @@
         android:name="org.love2d.android.GameActivity"
         android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
         android:label="LOVE for Android"
+=======
+      android:label="LÖVE for Android"
+      android:usesCleartextTraffic="true" >
+    <activity
+        android:name="org.love2d.android.GameActivity"
+        android:exported="true"
+        android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
+        android:label="LÖVE for Android"
+>>>>>>> b367b3733d32e1ea734d8f1215d94cb6c88fc0c4
         android:launchMode="singleTask"
         android:screenOrientation="landscape"
-        android:resizeableActivity="true"
+        android:resizeableActivity="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+<<<<<<< HEAD
         <intent-filter>
           <action android:name="android.intent.action.MAIN" />
           <category android:name="android.intent.category.LAUNCHER" />
@@ -100,3 +111,16 @@
       </activity>
     </application>
 </manifest>
+=======
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+        <category android:name="tv.ouya.intent.category.GAME" />
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+      </intent-filter>
+    </activity>
+  </application>
+</manifest> 
+>>>>>>> b367b3733d32e1ea734d8f1215d94cb6c88fc0c4

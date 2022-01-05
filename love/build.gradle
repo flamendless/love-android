@@ -6,15 +6,14 @@ android {
     // See https://code.google.com/p/android/issues/detail?id=52962
     // and http://stackoverflow.com/questions/27277433/why-does-gradle-build-my-module-in-release-mode-when-the-app-is-in-debug
     // defaultPublishConfig "debug"
-    compileSdkVersion 30
-    buildToolsVersion '30.0.2'
+    compileSdkVersion 31
+    buildToolsVersion '31.0.0'
     ndkVersion '21.3.6528147'
 
     defaultConfig {
-        compileSdkVersion 30
-        buildToolsVersion "30.0.2"
-        minSdkVersion 14
-        resValue 'bool', 'embed', 'false'
+        compileSdkVersion 31
+        buildToolsVersion '31.0.0'
+        minSdkVersion 16
         externalNativeBuild {
             ndkBuild {
                 arguments "-j2"
@@ -25,15 +24,49 @@ android {
             // Specifies the ABI configurations of your native
             // libraries Gradle should build and package with your APK.
             abiFilters 'armeabi-v7a', 'arm64-v8a'
+            debugSymbolLevel 'SYMBOL_TABLE'
         }
-        targetSdkVersion 30
-
         buildConfigField("String", "APPLICATION_ID", "\"${project.properties['admob.app_id']}\"")
         buildConfigField("String", "PUBLISHER_ID", "\"${project.properties['admob.publisher_id']}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${project.properties['admob.privacy_url']}\"")
         buildConfigField("String", "TEST_DEVICE_ID", "\"${project.properties['admob.test_device_id']}\"")
         buildConfigField("boolean", "COLLECT_CONSENT", "${project.properties['admob.collect_consent']}")
+        targetSdkVersion 31
     }
+
+    def retrieveAll3pModules = { ->
+        def modules = []
+
+        fileTree("src/jni/lua-modules").visit { FileVisitDetails details ->
+            if (details.isDirectory()) {
+                if (file(details.file.path + "/Android.mk").exists()) {
+                    logger.lifecycle("3rd-party module: " + details.file.path)
+
+                    def javainfo = file(details.file.path + "/java.txt")
+                    if (javainfo.exists()) {
+                        def fstream = new FileInputStream(javainfo)
+                        def infile = new BufferedReader(new InputStreamReader(fstream))
+                        def javapath = infile.readLine().replace("\\", "/")
+                        def mpath = null
+
+                        if (javapath[0] != '/') {
+                            mpath = details.file.path + "/" + javapath
+                        } else {
+                            mpath = details.file.path + javapath
+                        }
+
+                        modules << mpath
+
+                        logger.lifecycle("Registered path " + mpath)
+                        infile.close()
+                    }
+                }
+            }
+        }
+
+        return modules
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -50,12 +83,8 @@ android {
         normal {
             dimension 'mode'
         }
-        playstore {
-            dimension 'mode'
-        }
         embed {
             dimension 'mode'
-            resValue 'bool', 'embed', 'true'
         }
     }
     sourceSets {
@@ -63,11 +92,12 @@ android {
             java {
                 srcDir 'src/jni/SDL2/android-project/app/src/main/java'
                 srcDir 'src/main/java'
+                srcDirs += retrieveAll3pModules()
             }
         }
-        playstore {
+        normal {
             java {
-                srcDir 'src/normal/java'
+                srcDirs += 'src/normal/java'
             }
         }
     }
@@ -87,7 +117,7 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'androidx.appcompat:appcompat:1.4.0'
 
     if (project.hasProperty("flamendless.admob"))
     {

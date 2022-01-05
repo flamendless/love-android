@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2020 LOVE Development Team
+ * Copyright (c) 2006-2022 LOVE Development Team
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -36,15 +36,21 @@ import com.google.android.ump.UserMessagingPlatform;
 import java.util.List;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -60,7 +66,7 @@ import androidx.annotation.Keep;
 import androidx.core.app.ActivityCompat;
 
 public class GameActivity extends SDLActivity {
-    private static DisplayMetrics metrics = new DisplayMetrics();
+    private static DisplayMetrics metrics = null;
     private static String gamePath = "";
     public static Context context;
     private static Vibrator vibrator = null;
@@ -69,7 +75,6 @@ public class GameActivity extends SDLActivity {
     public static final int EXTERNAL_STORAGE_REQUEST_CODE = 2;
     public static final int RECORD_AUDIO_REQUEST_CODE = 3;
     private static boolean immersiveActive = false;
-    private static boolean mustCacheArchive = false;
     private static boolean needToCopyGameInArchive = false;
     private boolean storagePermissionUnnecessary = false;
     private boolean shortEdgesMode = false;
@@ -87,7 +92,6 @@ public class GameActivity extends SDLActivity {
             "c++_shared",
             "mpg123",
             "openal",
-            "hidapi",
             "love",
         };
     }
@@ -112,11 +116,9 @@ public class GameActivity extends SDLActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("GameActivity", "started");
 
-        context = this.getApplicationContext();
-
-        int res = context.checkCallingOrSelfPermission(Manifest.permission.VIBRATE);
+        int res = checkCallingOrSelfPermission(Manifest.permission.VIBRATE);
         if (res == PackageManager.PERMISSION_GRANTED) {
-            vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         } else {
             Log.d("GameActivity", "Vibration disabled: could not get vibration permission.");
         }
@@ -124,13 +126,12 @@ public class GameActivity extends SDLActivity {
         // These 2 variables must be reset or it will use the existing value.
         gamePath = "";
         storagePermissionUnnecessary = false;
-        embed = context.getResources().getBoolean(R.bool.embed);
+        embed = getResources().getBoolean(R.bool.embed);
 
-        // Get filename from "Open with" of another application
         handleIntent(this.getIntent());
 
         super.onCreate(savedInstanceState);
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        metrics = getResources().getDisplayMetrics();
 
         // Set low-latency audio values
         nativeSetDefaultStreamValues(getAudioFreq(), getAudioSMP());
@@ -154,17 +155,7 @@ public class GameActivity extends SDLActivity {
     }
 
     protected void handleIntent(Intent intent) {
-        Uri game = null;
-
-        // Try to handle "Share" intent.
-        // This is actually "bit tricky" to get working in user phone
-        // because shared static variables issue in the native side
-        // (user have to clear LOVE for Android in their recent apps list).
-        if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            game = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        } else {
-            game = intent.getData();
-        }
+        Uri game = intent.getData();
 
         if (!embed && game != null) {
             String scheme = game.getScheme();
@@ -188,7 +179,7 @@ public class GameActivity extends SDLActivity {
                 try {
                     String filename = "game.love";
                     String[] pathSegments = path.split("/");
-                    if (pathSegments != null && pathSegments.length > 0) {
+                    if (pathSegments.length > 0) {
                         filename = pathSegments[pathSegments.length - 1];
                     }
 
@@ -224,7 +215,7 @@ public class GameActivity extends SDLActivity {
         } else {
             // No game specified via the intent data or embed build is used.
             // Load game archive only when needed.
-            needToCopyGameInArchive = true;
+            needToCopyGameInArchive = embed;
         }
 
         Log.d("GameActivity", "new gamePath: " + gamePath);
@@ -234,12 +225,12 @@ public class GameActivity extends SDLActivity {
         try {
             // If we have a game.love in our assets folder copy it to the cache folder
             // so that we can load it from native LÖVE code
-            AssetManager assetManager = getAssetManager();
+            AssetManager assetManager = getAssets();
             InputStream gameStream = assetManager.open("game.love");
+            String destinationFile = this.getCacheDir().getPath() + "/game.love";
 
-            String destination_file = this.getCacheDir().getPath() + "/game.love";
-            if (mustCacheArchive && copyAssetFile(gameStream, destination_file))
-                gamePath = destination_file;
+            if (copyAssetFile(gameStream, destinationFile))
+                gamePath = destinationFile;
             else
                 gamePath = "game.love";
             storagePermissionUnnecessary = true;
@@ -357,29 +348,29 @@ public class GameActivity extends SDLActivity {
      *
      * @return true if successful
      */
-    boolean copyAssetFile(InputStream source_stream, String destinationFileName) {
+    boolean copyAssetFile(InputStream source, String destinationFileName) {
         boolean success = false;
 
-        BufferedOutputStream destination_stream = null;
+        BufferedOutputStream destination = null;
         try {
-            destination_stream = new BufferedOutputStream(new FileOutputStream(destinationFileName, false));
+            destination = new BufferedOutputStream(new FileOutputStream(destinationFileName, false));
         } catch (IOException e) {
             Log.d("GameActivity", "Could not open destination file: " + e.getMessage());
         }
 
         // perform the copying
-        int chunk_read = 0;
+        int chunk_read;
         int bytes_written = 0;
 
-        assert (source_stream != null && destination_stream != null);
+        assert (source != null && destination != null);
 
         try {
             byte[] buf = new byte[1024];
-            chunk_read = source_stream.read(buf);
+            chunk_read = source.read(buf);
             do {
-                destination_stream.write(buf, 0, chunk_read);
+                destination.write(buf, 0, chunk_read);
                 bytes_written += chunk_read;
-                chunk_read = source_stream.read(buf);
+                chunk_read = source.read(buf);
             } while (chunk_read != -1);
         } catch (IOException e) {
             Log.d("GameActivity", "Copying failed:" + e.getMessage());
@@ -387,8 +378,8 @@ public class GameActivity extends SDLActivity {
 
         // close streams
         try {
-            if (source_stream != null) source_stream.close();
-            if (destination_stream != null) destination_stream.close();
+            source.close();
+            destination.close();
             success = true;
         } catch (IOException e) {
             Log.d("GameActivity", "Copying failed: " + e.getMessage());
@@ -468,7 +459,7 @@ public class GameActivity extends SDLActivity {
                 }
                 case RECORD_AUDIO_REQUEST_CODE: {
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                        Log.d("GameActivity", "Mic ermission granted");
+                        Log.d("GameActivity", "Mic permission granted");
                     } else {
                         Log.d("GameActivity", "Did not get mic permission.");
                     }
@@ -552,8 +543,58 @@ public class GameActivity extends SDLActivity {
     }
 
     @Keep
-    public AssetManager getAssetManager() {
-        return getResources().getAssets();
+    public String[] buildFileTree() {
+        // Map key is path, value is directory flag
+        HashMap<String, Boolean> map = buildFileTree(getAssets(), "", new HashMap<String, Boolean>());
+        ArrayList<String> result = new ArrayList<String>();
+
+        for (Map.Entry<String, Boolean> data: map.entrySet()) {
+            result.add((data.getValue() ? "d" : "f") + data.getKey());
+        }
+
+        String[] r = new String[result.size()];
+        result.toArray(r);
+        return r;
+    }
+
+    private HashMap<String, Boolean> buildFileTree(AssetManager assetManager, String dir, HashMap<String, Boolean> map) {
+        String strippedDir = dir.endsWith("/") ? dir.substring(0, dir.length() - 1) : dir;
+
+        // Try open dir
+        try {
+            InputStream test = assetManager.open(strippedDir);
+            // It's a file
+            test.close();
+            map.put(strippedDir, false);
+        } catch (FileNotFoundException e) {
+            // It's a directory
+            String[] list = null;
+
+            // List files
+            try {
+                list = assetManager.list(dir);
+            } catch (IOException e2) {
+                Log.e("GameActivity", dir, e2);
+            }
+
+            // Mark as file
+            map.put(dir, true);
+
+            // This Object comparison is intentional.
+            if (strippedDir != dir) {
+                map.put(strippedDir, true);
+            }
+
+            if (list != null) {
+                for (String path: list) {
+                    buildFileTree(assetManager, dir + path + "/", map);
+                }
+            }
+        } catch (IOException e) {
+            Log.e("GameActivity", dir, e);
+        }
+
+        return map;
     }
 
     public int getAudioSMP() {
@@ -578,5 +619,39 @@ public class GameActivity extends SDLActivity {
         }
 
         return freq;
+    }
+
+    public boolean isNativeLibsExtracted() {
+        ApplicationInfo appInfo = getApplicationInfo();
+        boolean nativeLibsExtracted = true;
+
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            nativeLibsExtracted = (appInfo.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) != 0;
+        }
+
+        return nativeLibsExtracted;
+    }
+
+    @Keep
+    public String getCRequirePath() {
+        ApplicationInfo applicationInfo = getApplicationInfo();
+
+        if (isNativeLibsExtracted()) {
+            return applicationInfo.nativeLibraryDir + "/?.so";
+        } else {
+            // The native libs are inside the APK and can be loaded directly.
+            // FIXME: What about split APKs?
+            String abi;
+
+            if (android.os.Build.VERSION.SDK_INT >= 21) {
+                 abi = android.os.Build.SUPPORTED_ABIS[0];
+            } else {
+                // This codepath should NEVER be taken as if isNativeLibsExtracted()
+                // returns false, it's 100% safe to assume we're on API level 23 or later.
+                abi = android.os.Build.CPU_ABI;
+            }
+
+            return applicationInfo.sourceDir + "!/lib/" + abi + "/?.so";
+        }
     }
 }
