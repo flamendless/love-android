@@ -5,7 +5,7 @@ android {
     buildToolsVersion '31.0.0'
     ndkVersion '21.3.6528147'
     defaultConfig {
-        applicationId 'org.flamendless.anagramer'
+        applicationId 'org.flamendless.test'
         versionCode 1
         versionName '2a'
         minSdkVersion 16 //required by User Messaging Platform

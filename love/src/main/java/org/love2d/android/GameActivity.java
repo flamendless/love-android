@@ -572,9 +572,9 @@ public class GameActivity extends SDLActivity {
 
             // List files
             try {
-                list = assetManager.list(dir);
+                list = assetManager.list(strippedDir);
             } catch (IOException e2) {
-                Log.e("GameActivity", dir, e2);
+                Log.e("GameActivity", strippedDir, e2);
             }
 
             // Mark as file
