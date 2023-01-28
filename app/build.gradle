@@ -1,21 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '31.0.0'
-    ndkVersion '21.3.6528147'
+    compileSdk 33
+    buildToolsVersion '33.0.0'
+    ndkVersion '23.2.8568313'
     defaultConfig {
         applicationId 'org.flamendless.test'
-        versionCode 1
+        versionCode 2
         versionName '2a'
-        minSdkVersion 16 //required by User Messaging Platform
-        targetSdkVersion 30
+        minSdkVersion 19    // 19 required by Admob 21.x.x
+        targetSdk 33
+
+        multiDexEnabled true // TO BE REMOVED IF EXCEEDING DEX RESOLVED
 
         manifestPlaceholders = [
-            NAME:project.properties["app.name"],
-            ACTIVITY_NAME:project.properties["app.activity_name"],
-            ORIENTATION:project.properties["app.orientation"],
-            APPLICATION_ID:project.properties["admob.app_id"],
+                NAME:project.properties["app.name"],
+                ACTIVITY_NAME:project.properties["app.activity_name"],
+                ORIENTATION:project.properties["app.orientation"],
+                APPLICATION_ID:project.properties["admob.app_id"],
         ]
     }
     buildTypes {
@@ -47,12 +49,12 @@ android {
 dependencies {
     api 'androidx.multidex:multidex:2.0.1'
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.4.0'
+    api 'androidx.appcompat:appcompat:1.5.1'
     api project(':love')
 
     if (project.hasProperty("flamendless.admob"))
     {
-        api 'com.google.android.gms:play-services-ads:18.3.0'
+        api 'com.google.android.gms:play-services-ads:21.4.0'
         implementation 'com.google.code.gson:gson:2.8.4'
         implementation 'com.google.android.ump:user-messaging-platform:2.0.0'
     }

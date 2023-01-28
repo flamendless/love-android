@@ -16,6 +16,7 @@
       tools:node="replace" >
       <activity
         android:name="${ACTIVITY_NAME}"
+        android:exported="true"
         android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
         android:label="${NAME}"
         android:launchMode="singleTask"

@@ -3,10 +3,33 @@ package org.flamendless.admob;
 import org.love2d.android.BuildConfig;
 import org.love2d.android.GameActivity;
 
-import com.google.android.gms.ads.reward.*;
-import com.google.android.gms.ads.*; // import library
+/* Admob Imports */
+
 import com.google.android.gms.ads.MobileAds;
-import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdListener;
+
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.AdError;
+
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+
+import com.google.android.gms.ads.FullScreenContentCallback;
+
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+
+/* Other Imports */
 
 import com.google.android.ump.ConsentForm;
 import com.google.android.ump.ConsentInformation;
@@ -16,44 +39,22 @@ import com.google.android.ump.FormError;
 import com.google.android.ump.UserMessagingPlatform;
 
 import java.util.List;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import android.app.Activity;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.PowerManager;
-import android.os.ResultReceiver;
-import android.os.Vibrator;
 import android.util.Log;
 import android.util.DisplayMetrics;
-import android.widget.Toast;
 import android.view.*;
-import android.content.pm.PackageManager;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.graphics.Point;
+
+import androidx.annotation.NonNull;
 
 import java.lang.StringBuilder;
-import android.os.StrictMode;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.io.BufferedReader;
@@ -62,7 +63,6 @@ import java.net.URLEncoder;
 import java.io.Reader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.Thread;
 
 public class AdActivity extends GameActivity {
 
@@ -84,7 +84,7 @@ public class AdActivity extends GameActivity {
 	private AdView mAdView;
 	private RelativeLayout adContainer;
 	private boolean hasBanner = false;
-	private boolean bannerVisibile = false;
+	private boolean bannerVisible = false;
 	private boolean bannerHasFinishedLoading = false;
 	private boolean bannerCreated = false;
 	private String bannerPosition;
@@ -96,7 +96,7 @@ public class AdActivity extends GameActivity {
 	private boolean interstitialLoaded = false;
 
 	//Rewarded video stuff
-	private RewardedVideoAd mRewardedAd;
+	private RewardedAd mRewardedAd;
 	private boolean hasRewardedVideo = false;
 	private boolean rewardedAdLoaded = false;
 
@@ -109,6 +109,7 @@ public class AdActivity extends GameActivity {
 	private boolean rewardedAdDidFailToLoad = false;
 	private double rewardQty;
 	private String rewardType;
+
 
 	//Consents
 	private ConsentInformation consentInformation;
@@ -124,64 +125,6 @@ public class AdActivity extends GameActivity {
         }
         return mUrl;
     }
-
-	public void createRewardedVideo()
-	{
-		mRewardedAd = MobileAds.getRewardedVideoAdInstance(this);
-		mRewardedAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-			@Override
-			public void onRewarded(RewardItem reward) {
-				Log.d("AdActivity","onRewarded");
-				rewardedAdDidFinish = true;
-				rewardQty = reward.getAmount();
-				rewardType = reward.getType();
-			}
-
-			@Override
-			public void onRewardedVideoAdClosed()
-			{
-				Log.d("AdActivity","onRewardedVideoAdClosed");
-				rewardedAdDidStop = true;
-			}
-
-			@Override
-			public void onRewardedVideoAdFailedToLoad(int errorCode)
-			{
-				Log.d("AdActivity","onRewardedVideoAdFailedToLoad: Error " + errorCode);
-				rewardedAdDidFailToLoad = true;
-			}
-
-			@Override
-			public void onRewardedVideoAdLeftApplication()
-			{
-				Log.d("AdActivity","adClicked: Rewarded Video");
-
-			}
-
-			@Override
-			public void onRewardedVideoStarted()
-			{
-			}
-
-			@Override
-			public void onRewardedVideoAdLoaded()
-			{
-				rewardedAdLoaded = true;
-				Log.d("AdActivity","rewardedVideoAdLoaded");
-			}
-
-			@Override
-			public void onRewardedVideoAdOpened()
-			{
-				rewardedAdLoaded = false;
-			}
-
-			@Override
-			public void onRewardedVideoCompleted()
-			{
-			}
-		});
-	}
 
 	private void displayConsentForm() {
 		Log.i("AdActivity","displayConsentForm()");
@@ -263,24 +206,17 @@ public class AdActivity extends GameActivity {
 				});
 		}
 
-		if (appID.equals("INSERT-YOUR-APP-ID-HERE"))
-		{
-			Log.d("AdActivity","Initializing SDK without appID");
-			MobileAds.initialize(this);
-		}
-		else
-		{
-			Log.d("AdActivity","Initializing SDK with appID");
-			MobileAds.initialize(this, appID);
-		}
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
 
-		//RequestConfiguration configuration =
-		//		new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-		//MobileAds.setRequestConfiguration(configuration);
+        RequestConfiguration configuration =
+				new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+		MobileAds.setRequestConfiguration(configuration);
 
-		createRewardedVideo();
 	}
-
 
 	@Override
 	protected void onStart() {
@@ -289,8 +225,8 @@ public class AdActivity extends GameActivity {
 
 	@Override
     protected void onDestroy() {
-      super.onDestroy();
-	  if (hasBanner) {
+        super.onDestroy();
+      if (hasBanner) {
 			mAdView.destroy();
 			adContainer.setVisibility(View.GONE);
 			bannerCreated = false;
@@ -300,8 +236,8 @@ public class AdActivity extends GameActivity {
 
     @Override
     protected void onPause() {
-      super.onPause();
-	  if (hasBanner) {
+        super.onPause();
+        if (hasBanner) {
 			mAdView.destroy();
 			adContainer.setVisibility(View.GONE);
 			bannerCreated = false;
@@ -311,8 +247,8 @@ public class AdActivity extends GameActivity {
 
     @Override
     public void onResume() {
-      super.onResume();
-	  if (hasBanner) {
+        super.onResume();
+      if (hasBanner) {
 			createBanner(bannerAdID,bannerPosition);
 			Log.d("AdActivity","OnResume");
 		}
@@ -328,27 +264,15 @@ public class AdActivity extends GameActivity {
 				if (!bannerCreated){
 					Log.d("AdActivity","CreateBanner: \"" + position + "\"");
 					mAdView = new AdView(mSingleton);
-					mAdView.setAdUnitId(adID);
+                    mAdView.setAdSize(AdSize.BANNER);
+                    mAdView.setAdUnitId(adID);
 
-					//CODE FOR ADAPTIVE BANNER:
-					/*
-					AdSize adSize = getAdSize();
+                    // Another way to set the size
+					//AdSize adSize = getAdSize();
+					//mAdView.setAdSize(adSize);
 
-					mAdView.setAdSize(adSize);
-					*/
-					mAdView.setAdSize(AdSize.SMART_BANNER);
-
-					AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
-					for (String s : testDeviceIds)
-					{
-						adRequestBuilder.addTestDevice(s);
-					}
-					adRequest = adRequestBuilder
-						.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
-						.build();
-					mAdView.loadAd(adRequest);
-
-					adContainer = new RelativeLayout(mSingleton);
+                    adRequest = new AdRequest.Builder().build();
+                    adContainer = new RelativeLayout(mSingleton);
 
 					// Place the ad view.
 
@@ -388,7 +312,7 @@ public class AdActivity extends GameActivity {
 					mAdView.setAdListener(new AdListener(){
 						@Override
 						public void onAdLoaded() {
-							if (bannerVisibile)
+							if (bannerVisible)
 							{
 								mAdView.setVisibility(View.GONE);
 								mAdView.setVisibility(View.VISIBLE);
@@ -397,12 +321,12 @@ public class AdActivity extends GameActivity {
 							{
 								mAdView.setVisibility(View.GONE);
 							}
-							Log.d("AdActivity","Banner - onAdLoaded: " + bannerVisibile);
+							Log.d("AdActivity","Banner - onAdLoaded: " + bannerVisible);
 							bannerHasFinishedLoading = true;
 						}
 
 						@Override
-						public void onAdLeftApplication() {
+						public void onAdClicked() {
 							Log.d("AdActivity","adClicked: AdMob Banner");
 
 						}
@@ -446,7 +370,7 @@ public class AdActivity extends GameActivity {
 					mAdView.setVisibility(View.GONE);
 					Log.d("AdActivity", "Banner Hidden");
 				}
-				bannerVisibile = false;
+				bannerVisible = false;
 			}
 		});
 	}
@@ -467,7 +391,7 @@ public class AdActivity extends GameActivity {
 					mAdView.setVisibility(View.VISIBLE);
 					Log.d("AdActivity", "Banner Showing");
 				}
-				bannerVisibile = true;
+				bannerVisible = true;
 			}
 		});
 	}
@@ -481,59 +405,64 @@ public class AdActivity extends GameActivity {
 			@Override
 			public void run()
 			{
-				mInterstitialAd = new InterstitialAd(mSingleton);
-				mInterstitialAd.setAdUnitId(adID);
+                adRequest = new AdRequest.Builder().build();
 
-				AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
-				for (String s : testDeviceIds)
-				{
-					adRequestBuilder.addTestDevice(s);
-				}
+                InterstitialAd.load(mSingleton, adID, adRequest,
+                    new InterstitialAdLoadCallback() {
 
-				AdRequest adRequest = adRequestBuilder
-					.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
-					.build();
-				mInterstitialAd.loadAd(adRequest);
+                        @Override
+                        public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                            Log.i("AdActivity", "interstitialDidReceive");
 
-				mInterstitialAd.setAdListener(new AdListener()
-				{
-					@Override
-					public void onAdClosed()
-					{
-						interstitialDidClose = true;
-						Log.d("AdActivity", "onInterstitialClosed");
-					}
+                            mInterstitialAd = interstitialAd;
+                            interstitialLoaded = true;
 
-					@Override
-					public void onAdLoaded()
-					{
-						Log.d("AdActivity", "interstitialDidReceive");
-						interstitialLoaded = true;
-					}
+                            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                @Override
+                                public void onAdClicked() {
+                                    Log.d("AdActivity","adClicked: Interstitial");
+                                }
 
-					@Override
-					public void onAdFailedToLoad(int errorCode)
-					{
-						Log.d("AdActivity", "onInterstitialFailedToLoad: Error " + errorCode);
-						interstitialDidFailToLoad = true;
-					}
+                                @Override
+                                public void onAdDismissedFullScreenContent() {
+                                    Log.d("AdActivity", "Ad dismissed fullscreen content.");
+                                    interstitialDidClose = true;
+                                    mInterstitialAd = null;
+                                }
 
-					@Override
-					public void onAdOpened()
-					{
-						interstitialLoaded = false;
-					}
+                                @Override
+                                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                                    Log.e("AdActivity", "Ad failed to show fullscreen content.");
+                                    mInterstitialAd = null;
+                                }
 
-					@Override
-					public void onAdLeftApplication()
-					{
-						Log.d("AdActivity","adClicked: Interstitial");
+                                @Override
+                                public void onAdImpression() {
+                                    Log.d("AdActivity", "Ad recorded an impression.");
+                                    interstitialLoaded = false;
+                                }
 
-					}
-				});
+                                @Override
+                                public void onAdShowedFullScreenContent() {
+                                    Log.d("AdActivity", "Ad showed fullscreen content.");
+                                    interstitialLoaded = false;
+                                }
+                            });
 
-				hasInterstitial = true;
-			}
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError error) {
+                            Log.i("AdActivity", "onInterstitialFailedToLoad: Error " + error.getCode() + " " + error.getMessage());
+                            interstitialDidFailToLoad = true;
+                        }
+
+                    }
+                );
+
+                hasInterstitial = true;
+            }
+
 		});
 	}
 
@@ -547,7 +476,7 @@ public class AdActivity extends GameActivity {
 
 				if (hasInterstitial)
 				{
-					if (mInterstitialAd.isLoaded())
+					if (mInterstitialAd != null)
 					{
 						interstitialLoaded = true;
 						Log.d("AdActivity", "Interstitial is loaded: " + interstitialLoaded);
@@ -589,9 +518,9 @@ public class AdActivity extends GameActivity {
 
 				if (hasInterstitial)
 				{
-					if (mInterstitialAd.isLoaded())
+					if (mInterstitialAd != null)
 					{
-						mInterstitialAd.show();
+						mInterstitialAd.show(mSingleton);
 						Log.d("AdActivity", "Ad loaded!, showing...");
 					}
 					else
@@ -606,6 +535,7 @@ public class AdActivity extends GameActivity {
 	public void requestRewardedAd(final String adID)
 	{
 		Log.d("AdActivity", "requestRewardedAd");
+
 		if (!hasRewardedVideo)
 		{
 			hasRewardedVideo = true;
@@ -615,18 +545,64 @@ public class AdActivity extends GameActivity {
 			@Override
 			public void run()
 			{
-				AdRequest.Builder adRequestBuilder = new AdRequest.Builder();
-				for (String s : testDeviceIds)
-				{
-					adRequestBuilder.addTestDevice(s);
-				}
 
-				mRewardedAd.loadAd(adID, adRequestBuilder
-					.addNetworkExtrasBundle(AdMobAdapter.class, adExtras)
-					.build());
+                adRequest = new AdRequest.Builder().build();
+
+                RewardedAd.load(mSingleton, adID, adRequest,
+                    new RewardedAdLoadCallback() {
+
+                        @Override
+                        public void onAdLoaded(@NonNull RewardedAd rewardedAd)  {
+                            Log.i("AdActivity", "rewardedAdDidReceive");
+
+                            mRewardedAd = rewardedAd;
+                            rewardedAdLoaded = true;
+
+                            mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                                @Override
+                                public void onAdClicked() {
+                                    Log.d("AdActivity","adClicked: RewardedAd");
+                                }
+
+                                @Override
+                                public void onAdDismissedFullScreenContent() {
+                                    Log.d("AdActivity", "Ad dismissed fullscreen content.");
+                                    rewardedAdDidStop = true;
+                                    mRewardedAd = null;
+                                }
+
+                                @Override
+                                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                                    Log.e("AdActivity", "Ad failed to show fullscreen content.");
+                                    mRewardedAd = null;
+                                }
+
+                                @Override
+                                public void onAdImpression() {
+                                    Log.d("AdActivity", "Ad recorded an impression.");
+                                    rewardedAdLoaded = false;
+                                }
+
+                                @Override
+                                public void onAdShowedFullScreenContent() {
+                                    Log.d("AdActivity", "Ad showed fullscreen content.");
+                                    rewardedAdLoaded = false;
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onAdFailedToLoad(@NonNull LoadAdError error) {
+                            Log.i("AdActivity", "onRewardedAdFailedToLoad: Error " + error.getCode() + " " + error.getMessage());
+                            rewardedAdDidFailToLoad = true;
+                        }
+
+                    }
+                );
+
 			}
 		});
-
 
 	}
 
@@ -640,7 +616,7 @@ public class AdActivity extends GameActivity {
 
 				if (hasRewardedVideo)
 				{
-					if (mRewardedAd.isLoaded())
+					if (mRewardedAd != null)
 					{
 						Log.d("AdActivity", "Rewarded ad is loaded");
 						rewardedAdLoaded = true;
@@ -680,9 +656,16 @@ public class AdActivity extends GameActivity {
 
 				if (hasRewardedVideo)
 				{
-					if (mRewardedAd.isLoaded())
+					if (mRewardedAd != null)
 					{
-						mRewardedAd.show();
+						mRewardedAd.show(mSingleton, new OnUserEarnedRewardListener() {
+                            @Override
+                            public void onUserEarnedReward(RewardItem reward) {
+                                rewardedAdDidFinish = true;
+                                rewardQty = reward.getAmount();
+                                rewardType = reward.getType();
+                            }
+                        });
 						Log.d("AdActivity", "RewardedAd loaded!, showing...");
 					}
 					else
