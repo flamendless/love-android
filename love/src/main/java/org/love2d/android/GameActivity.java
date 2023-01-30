@@ -22,16 +22,16 @@ package org.love2d.android;
 
 import org.libsdl.app.SDLActivity;
 
-import com.google.android.gms.ads.reward.*;
-import com.google.android.gms.ads.*; // import library
-import com.google.android.gms.ads.MobileAds;
-import com.google.ads.mediation.admob.AdMobAdapter;
+//import com.google.android.gms.ads.rewarded.*;
+//import com.google.android.gms.ads.*; // import library
+//import com.google.android.gms.ads.MobileAds;
+//import com.google.ads.mediation.admob.AdMobAdapter;
 
-import com.google.android.ump.ConsentForm;
-import com.google.android.ump.ConsentInformation;
-import com.google.android.ump.ConsentRequestParameters;
-import com.google.android.ump.FormError;
-import com.google.android.ump.UserMessagingPlatform;
+//import com.google.android.ump.ConsentForm;
+//import com.google.android.ump.ConsentInformation;
+//import com.google.android.ump.ConsentRequestParameters;
+//import com.google.android.ump.FormError;
+//import com.google.android.ump.UserMessagingPlatform;
 
 import java.util.List;
 import java.io.BufferedOutputStream;
@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+//import java.util.List;
 import java.util.Map;
 
 import android.Manifest;
