@@ -2,24 +2,9 @@
 
 Uses [love android extensions fork](https://github.com/flamendless/love)
 
-## EXTENSIONS
+## EXTENSIONS AND INSTRUCTIONS
 
 * [AdMob](https://github.com/flamendless/love-android-extensions/blob/android_ext/GUIDE_ADMOB.md)
-
----
-
-## INSTRUCTIONS
-
-Add to `gradle.properties` the following (modify according to your data):
-```
-app.name=GAME_APP_TITLE
-app.activity_name=org.flamendless.admob.AdActivity
-app.orientation=portrait
-```
-
-Modify the `applicationId`, `versionName`, and `versionCode` in `app/build.gradle`
-
-You can opt-in each extension by looking at each extensions guide.
 
 ---
 
