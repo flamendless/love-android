@@ -31,7 +31,7 @@ You can opt-in each extension by looking at each extensions guide.
 
 ---
 
-Android Port of LÖVE, an awesome 2D game engine for Lua (http://love2d.org)  
+Android Port of LÖVE, an awesome 2D game engine for Lua (http://love2d.org)
 Copyright (c) 2006-2022 LOVE Development Team
 
 ![](https://github.com/love2d/love-android/workflows/build/badge.svg)
@@ -220,7 +220,7 @@ alpha9:
 
 * Packaged games do not get duplicated for loading, instead are loaded from memory (!!!)
 * Using inofficial physfs 2.1
-* Removed love.android.getDisplayMetrics(), instead use love.window.getPixelScale() 
+* Removed love.android.getDisplayMetrics(), instead use love.window.getPixelScale()
 * Properly link LGPL libraries dynamically. Everything else is linked statically
 * Added an icon (design by @josefnpat)
 * Fixed crash on startup on OUYA (and possibly other devices)
