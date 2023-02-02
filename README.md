@@ -5,6 +5,7 @@ Uses [love android extensions fork](https://github.com/flamendless/love)
 ## EXTENSIONS AND INSTRUCTIONS
 
 * [AdMob](https://github.com/flamendless/love-android-extensions/blob/android_ext/GUIDE_ADMOB.md)
+* [Packaging](https://github.com/flamendless/love-android-extensions/blob/android_ext/GUIDE_PACKAGING.md)
 
 ---
 
