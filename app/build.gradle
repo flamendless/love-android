@@ -6,8 +6,8 @@ android {
     ndkVersion '23.2.8568313'
     defaultConfig {
         applicationId project.properties["app.application_id"]
-        versionCode 2
-        versionName '2a'
+        versionCode project.properties["app.version_code"].toInteger()
+        versionName project.properties["app.version_name"]
         minSdkVersion 19    // 19 required by Admob 21.x.x
         targetSdk 33
 
