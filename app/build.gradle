@@ -5,7 +5,7 @@ android {
     buildToolsVersion '33.0.0'
     ndkVersion '23.2.8568313'
     defaultConfig {
-        applicationId 'org.flamendless.test'
+        applicationId project.properties["app.application_id"]
         versionCode 2
         versionName '2a'
         minSdkVersion 19    // 19 required by Admob 21.x.x
@@ -14,10 +14,10 @@ android {
         multiDexEnabled true // TO BE REMOVED IF EXCEEDING DEX RESOLVED
 
         manifestPlaceholders = [
-                NAME:project.properties["app.name"],
-                ACTIVITY_NAME:project.properties["app.activity_name"],
-                ORIENTATION:project.properties["app.orientation"],
-                APPLICATION_ID:project.properties["admob.app_id"],
+            NAME:project.properties["app.name"],
+            ACTIVITY_NAME:project.properties["app.activity_name"],
+            ORIENTATION:project.properties["app.orientation"],
+            APPLICATION_ID:project.properties["admob.app_id"],
         ]
     }
     buildTypes {
