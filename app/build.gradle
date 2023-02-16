@@ -1,3 +1,5 @@
+import java.nio.charset.StandardCharsets
+
 apply plugin: 'com.android.application'
 
 android {
@@ -8,16 +10,33 @@ android {
         applicationId project.properties["app.application_id"]
         versionCode project.properties["app.version_code"].toInteger()
         versionName project.properties["app.version_name"]
-        minSdkVersion 19    // 19 required by Admob 21.x.x
+        minSdkVersion 19
         targetSdk 33
 
         multiDexEnabled true // TO BE REMOVED IF EXCEEDING DEX RESOLVED
 
+        def getAppName = {
+            def nameArray = project.properties["app.name_byte_array"]
+            def name = project.properties["app.name"]
+            if (name != null && nameArray != null) {
+                throw new Exception("Only define either `app.name` or `app.name_byte_array` in gradle.properties, but not both!")
+            }
+
+            if (name == null) {
+                def nameArraySplit = nameArray.split(",")
+                def nameBytes = new byte[nameArraySplit.length]
+                def count = 0
+                for (String s: nameArraySplit) {
+                    nameBytes[count++] = (byte) Integer.parseInt(s)
+                }
+                return new String(nameBytes, StandardCharsets.UTF_8)
+            }
+            return name
+        }
+
         manifestPlaceholders = [
-            NAME:project.properties["app.name"],
-            ACTIVITY_NAME:project.properties["app.activity_name"],
+            NAME:getAppName(),
             ORIENTATION:project.properties["app.orientation"],
-            APPLICATION_ID:project.properties["admob.app_id"],
         ]
     }
     buildTypes {
