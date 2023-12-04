@@ -3,17 +3,16 @@ import java.nio.charset.StandardCharsets
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 33
-    buildToolsVersion '33.0.0'
-    ndkVersion '23.2.8568313'
+    namespace "org.love2d.android.executable"
+    ndkVersion '25.2.9519653'
+
     defaultConfig {
         applicationId project.properties["app.application_id"]
         versionCode project.properties["app.version_code"].toInteger()
         versionName project.properties["app.version_name"]
-        minSdkVersion 19
-        targetSdk 33
-
-        multiDexEnabled true // TO BE REMOVED IF EXCEEDING DEX RESOLVED
+        minSdk 16
+        compileSdk 34
+        targetSdk 34
 
         def getAppName = {
             def nameArray = project.properties["app.name_byte_array"]
@@ -45,7 +44,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    flavorDimensions 'mode', 'recording'
+    flavorDimensions = ['mode', 'recording']
     productFlavors {
         normal {
             dimension 'mode'
@@ -60,7 +59,7 @@ android {
             dimension 'recording'
         }
     }
-    lintOptions {
+    lint {
         abortOnError false
     }
 }
@@ -68,7 +67,7 @@ android {
 dependencies {
     api 'androidx.multidex:multidex:2.0.1'
     api fileTree(dir: 'libs', include: ['*.jar'])
-    api 'androidx.appcompat:appcompat:1.5.1'
+    api 'androidx.appcompat:appcompat:1.6.1'
     api project(':love')
 
     if (project.hasProperty("flamendless.admob"))

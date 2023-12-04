@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2022 LOVE Development Team
+ * Copyright (c) 2006-2023 LOVE Development Team
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -128,7 +128,10 @@ public class GameActivity extends SDLActivity {
         storagePermissionUnnecessary = false;
         embed = getResources().getBoolean(R.bool.embed);
 
-        handleIntent(this.getIntent());
+        if (!embed) {
+            handleIntent(getIntent());
+            setIntent(null);
+        }
 
         super.onCreate(savedInstanceState);
         metrics = getResources().getDisplayMetrics();
@@ -216,6 +219,7 @@ public class GameActivity extends SDLActivity {
             // No game specified via the intent data or embed build is used.
             // Load game archive only when needed.
             needToCopyGameInArchive = embed;
+            gamePath = "";
         }
 
         Log.d("GameActivity", "new gamePath: " + gamePath);
@@ -623,13 +627,12 @@ public class GameActivity extends SDLActivity {
 
     public boolean isNativeLibsExtracted() {
         ApplicationInfo appInfo = getApplicationInfo();
-        boolean nativeLibsExtracted = true;
 
         if (android.os.Build.VERSION.SDK_INT >= 23) {
-            nativeLibsExtracted = (appInfo.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) != 0;
+            return (appInfo.flags & ApplicationInfo.FLAG_EXTRACT_NATIVE_LIBS) != 0;
         }
 
-        return nativeLibsExtracted;
+        return true;
     }
 
     @Keep

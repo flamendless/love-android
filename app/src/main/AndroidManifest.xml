@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    package="org.love2d.android.executable"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -35,7 +33,7 @@
         android:exported="true"
         android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation"
         android:label="${NAME}"
-        android:launchMode="singleTask"
+        android:launchMode="singleInstance"
         android:screenOrientation="${ORIENTATION}"
         android:resizeableActivity="false"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
