@@ -66,7 +66,7 @@ import java.io.StringWriter;
 
 public class AdActivity extends GameActivity {
 
-	private String appID = BuildConfig.APPLICATION_ID;
+	private String appID = BuildConfig.ADMOB_APP_ID;
 	private boolean fullscreen = false; //CONFIG for banner
 	private boolean collectConsent = BuildConfig.COLLECT_CONSENT; //CONFIG for GPDR consent
 	private String publisherID = BuildConfig.PUBLISHER_ID; //For consent (Like "pub-3940256099942544")

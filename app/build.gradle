@@ -10,9 +10,12 @@ android {
         applicationId project.properties["app.application_id"]
         versionCode project.properties["app.version_code"].toInteger()
         versionName project.properties["app.version_name"]
-        minSdk 16
+        minSdk 19
         compileSdk 34
         targetSdk 34
+
+        // Use if you get exception about multidex
+        multiDexEnabled true
 
         def getAppName = {
             def nameArray = project.properties["app.name_byte_array"]
@@ -35,6 +38,8 @@ android {
 
         manifestPlaceholders = [
             NAME:getAppName(),
+            ACTIVITY_NAME:project.properties["app.activity_name"],
+            ADMOB_APP_ID:project.properties["admob.admob_app_id"],
             ORIENTATION:project.properties["app.orientation"],
         ]
     }
