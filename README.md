@@ -12,13 +12,13 @@ Uses [love android extensions fork](https://github.com/flamendless/love)
 ## CHANGES
 
 * Major refactor to use `ads` as a separate module from `love.ads`
-* Updated to love 11.3
+* Updated to love 11.5
 * Use User Messaging Platform for EU Consent instead of the deprecated consent-sdk
 
 ---
 
 Android Port of LÖVE, an awesome 2D game engine for Lua (http://love2d.org)
-Copyright (c) 2006-2022 LOVE Development Team
+Copyright (c) 2006-2024 LOVE Development Team
 
 ![Build Status](https://github.com/love2d/love-android/workflows/build/badge.svg)
 
