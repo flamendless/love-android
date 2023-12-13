@@ -1,4 +1,4 @@
 [submodule "love/src/jni/love"]
 	path = love/src/jni/love
 	url = https://github.com/flamendless/love
-	branch = admob
+	branch = android_ext

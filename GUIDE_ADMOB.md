@@ -13,7 +13,7 @@ app.activity_name=org.love2d.android.GameActivity # probably don't change this a
 app.application_id=org.flamendless.test # this should be unique
 app.orientation=landscape # or portrait
 
-admob.app_id=ca-app-pub-xxxx
+admob.admob_app_id=ca-app-pub-xxxx
 admob.publisher_id=pub-xxxx
 admob.privacy_url=https://www.google.com/about/company/user-consent-policy/
 admob.test_device_id=XXXX
@@ -21,8 +21,6 @@ admob.collect_consent=true
 
 flamendless.admob=true
 ```
-
-Modify the `applicationId`, `versionName`, and `versionCode` in `app/build.gradle`
 
 
 ## Usage with LOVE
