@@ -127,6 +127,7 @@ public class GameActivity extends SDLActivity {
         gamePath = "";
         storagePermissionUnnecessary = false;
         embed = getResources().getBoolean(R.bool.embed);
+        needToCopyGameInArchive = embed;
 
         if (!embed) {
             handleIntent(getIntent());
@@ -215,11 +216,6 @@ public class GameActivity extends SDLActivity {
                 alert_dialog.setCancelable(false);
                 alert_dialog.create().show();
             }
-        } else {
-            // No game specified via the intent data or embed build is used.
-            // Load game archive only when needed.
-            needToCopyGameInArchive = embed;
-            gamePath = "";
         }
 
         Log.d("GameActivity", "new gamePath: " + gamePath);
