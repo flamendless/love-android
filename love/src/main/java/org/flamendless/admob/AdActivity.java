@@ -68,7 +68,7 @@ public class AdActivity extends GameActivity {
 
 	private String appID = BuildConfig.ADMOB_APP_ID;
 	private boolean fullscreen = false; //CONFIG for banner
-	private boolean collectConsent = BuildConfig.COLLECT_CONSENT; //CONFIG for GPDR consent
+	private boolean collectConsent = BuildConfig.COLLECT_CONSENT; //CONFIG for GDPR consent
 	private String publisherID = BuildConfig.PUBLISHER_ID; //For consent (Like "pub-3940256099942544")
 	private String privacyURL = BuildConfig.PRIVACY_URL; // For consent
 	private List<String> testDeviceIds = Arrays.asList(BuildConfig.TEST_DEVICE_ID); //no dash and all uppercase format
