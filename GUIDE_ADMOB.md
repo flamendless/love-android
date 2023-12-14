@@ -9,7 +9,7 @@ Read original post/thread [here](https://love2d.org/forums/viewtopic.php?f=5&t=8
 Add to `gradle.properties` the following (modify according to your data):
 ```
 app.name=Going Home # your game's title'
-app.activity_name=org.love2d.android.GameActivity # probably don't change this anymore
+app.activity_name=org.flamendless.admob.AdActivity # probably don't change this anymore
 app.application_id=org.flamendless.test # this should be unique
 app.orientation=landscape # or portrait
 

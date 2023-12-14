@@ -7,7 +7,7 @@
   <application tools:node="merge">
     <service android:name="org.love2d.android.DownloadService" />
     <activity
-        android:name="org.love2d.android.GameActivity"
+        android:name="${ACTIVITY_NAME}"
         tools:node="merge" >
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
