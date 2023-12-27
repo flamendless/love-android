@@ -46,11 +46,11 @@ import java.util.Arrays;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.*;
-import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 
@@ -212,10 +212,8 @@ public class AdActivity extends GameActivity {
             }
         });
 
-        RequestConfiguration configuration =
-				new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
 		MobileAds.setRequestConfiguration(configuration);
-
 	}
 
 	@Override
@@ -254,7 +252,7 @@ public class AdActivity extends GameActivity {
 		}
     }
 
-	public void createBanner(final String adID,final String position)
+	public void createBanner(final String adID, final String position)
 	{
 		bannerPosition = position;
 		bannerAdID = adID;
@@ -330,6 +328,12 @@ public class AdActivity extends GameActivity {
 							Log.d("AdActivity","adClicked: AdMob Banner");
 
 						}
+
+						@Override
+						public void onAdFailedToLoad(@NonNull LoadAdError error) {
+							Log.i("AdActivity","Banner onAdFailedToLoad Error " + error.getCode() + " " + error.getMessage());
+
+						}
 					});
 					hasBanner = true;
 					bannerCreated = true;
@@ -377,7 +381,7 @@ public class AdActivity extends GameActivity {
 
 	public void showBanner()
 	{
-		Log.d("AdActivity", "showBanner");
+		Log.d("AdActivity", "showBanner: hasBanner = " + hasBanner + ", bannerHasFinishedLoading = " + bannerHasFinishedLoading);
 
 		runOnUiThread(new Runnable()
 		{
@@ -493,9 +497,8 @@ public class AdActivity extends GameActivity {
 
 	public boolean isInterstitialLoaded()
 	{
-		Log.d("AdActivity", "isInterstitialLoaded");
-
 		//WORKAROUND: runOnUiThread finishes after the return of this function, then interstitialLoaded could be wrong!
+		Log.d("AdActivity", "isInterstitialLoaded " + interstitialLoaded);
 		if (interstitialLoaded)
 		{
 			updateInterstitialState();
