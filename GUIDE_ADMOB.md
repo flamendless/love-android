@@ -11,6 +11,8 @@ Add to `gradle.properties` the following (modify according to your data):
 app.name=Going Home # your game's title'
 app.activity_name=org.flamendless.admob.AdActivity # probably don't change this anymore
 app.application_id=org.flamendless.test # this should be unique
+app.version_code=1
+app.version_name=0.0.1
 app.orientation=landscape # or portrait
 
 admob.admob_app_id=ca-app-pub-xxxx
