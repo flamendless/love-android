@@ -21,7 +21,7 @@ admob.privacy_url=https://www.google.com/about/company/user-consent-policy/
 admob.test_device_id=XXXX
 admob.collect_consent=true
 
-flamendless.admob=true
+flamendless.admob=1
 ```
 
 

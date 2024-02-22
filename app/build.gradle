@@ -39,9 +39,13 @@ android {
         manifestPlaceholders = [
             NAME:getAppName(),
             ACTIVITY_NAME:project.properties["app.activity_name"],
-            ADMOB_APP_ID:project.properties["admob.admob_app_id"],
             ORIENTATION:project.properties["app.orientation"],
         ]
+
+        if (project.hasProperty("admob.admob_app_id"))
+        {
+            manifestPlaceholders.ADMOB_APP_ID = project.properties["admob.admob_app_id"]
+        }
     }
     buildTypes {
         release {

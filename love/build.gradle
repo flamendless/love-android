@@ -26,11 +26,28 @@ android {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
             debugSymbolLevel 'SYMBOL_TABLE'
         }
-        buildConfigField("String", "ADMOB_APP_ID", "\"${project.properties['admob.admob_app_id']}\"")
-        buildConfigField("String", "PUBLISHER_ID", "\"${project.properties['admob.publisher_id']}\"")
-        buildConfigField("String", "PRIVACY_URL", "\"${project.properties['admob.privacy_url']}\"")
-        buildConfigField("String", "TEST_DEVICE_ID", "\"${project.properties['admob.test_device_id']}\"")
-        buildConfigField("boolean", "COLLECT_CONSENT", "${project.properties['admob.collect_consent']}")
+
+        if (project.hasProperty("admob.admob_app_id"))
+        {
+            buildConfigField("String", "ADMOB_APP_ID", "\"${project.properties['admob.admob_app_id']}\"")
+        }
+        if (project.hasProperty("admob.publisher_id"))
+        {
+            buildConfigField("String", "PUBLISHER_ID", "\"${project.properties['admob.publisher_id']}\"")
+        }
+        if (project.hasProperty("admob.privacy_url"))
+        {
+            buildConfigField("String", "PRIVACY_URL", "\"${project.properties['admob.privacy_url']}\"")
+        }
+        if (project.hasProperty("admob.test_device_id"))
+        {
+            buildConfigField("String", "TEST_DEVICE_ID", "\"${project.properties['admob.test_device_id']}\"")
+        }
+        if (project.hasProperty("admob.collect_consent"))
+        {
+            buildConfigField("boolean", "COLLECT_CONSENT", "${project.properties['admob.collect_consent']}")
+        }
+
         targetSdkVersion 31
     }
 
@@ -95,6 +112,11 @@ android {
                 srcDir 'src/jni/SDL2/android-project/app/src/main/java'
                 srcDir 'src/main/java'
                 srcDirs += retrieveAll3pModules()
+
+                if (!project.hasProperty("flamendless.admob"))
+                {
+                    exclude '**/flamendless/admob/**'
+                }
             }
         }
         normal {
