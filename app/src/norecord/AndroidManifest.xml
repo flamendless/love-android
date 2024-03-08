@@ -3,4 +3,4 @@
   xmlns:tools="http://schemas.android.com/tools"
 >
   <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove" />
-</manifest> 
+</manifest>
