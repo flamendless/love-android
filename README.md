@@ -35,7 +35,7 @@ If you want to build from source, make sure to clone the submodules too. Often e
 liblove.so and "Missing LÖVE" error when building. A proper way to clone this repository is:
 
 ```
-git clone --recurse-submodules https://github.com/love2d/love-android
+git clone --recurse-submodules https://github.com/flamendless/love-android-extensions
 ```
 
 Add `-b <branch/tag name>` and `--depth 1` if needed.
