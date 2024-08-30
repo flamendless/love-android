@@ -85,7 +85,6 @@ public class AdActivity extends GameActivity {
 	private RelativeLayout adContainer;
 	private boolean hasBanner = false;
 	private boolean bannerVisible = false;
-	private boolean bannerHasFinishedLoading = false;
 	private boolean bannerCreated = false;
 	private String bannerPosition;
 	private String bannerAdID = ""; //no need to set
@@ -209,6 +208,7 @@ public class AdActivity extends GameActivity {
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
+                  Log.i("AdActivity", "initialized");
             }
         });
 
@@ -224,7 +224,7 @@ public class AdActivity extends GameActivity {
 	@Override
     protected void onDestroy() {
         super.onDestroy();
-      if (hasBanner) {
+        if (hasBanner) {
 			mAdView.destroy();
 			adContainer.setVisibility(View.GONE);
 			bannerCreated = false;
@@ -246,7 +246,7 @@ public class AdActivity extends GameActivity {
     @Override
     public void onResume() {
         super.onResume();
-      if (hasBanner) {
+        if (hasBanner) {
 			createBanner(bannerAdID,bannerPosition);
 			Log.d("AdActivity","OnResume");
 		}
@@ -256,6 +256,7 @@ public class AdActivity extends GameActivity {
 	{
 		bannerPosition = position;
 		bannerAdID = adID;
+
 		runOnUiThread(new Runnable(){
 			@Override
 			public void run() {
@@ -266,50 +267,13 @@ public class AdActivity extends GameActivity {
                     mAdView.setAdUnitId(adID);
 
                     // Another way to set the size
-					//AdSize adSize = getAdSize();
-					//mAdView.setAdSize(adSize);
+					// AdSize adSize = getAdSize();
+					// mAdView.setAdSize(adSize);
 
-                    adRequest = new AdRequest.Builder().build();
-                    adContainer = new RelativeLayout(mSingleton);
-
-					// Place the ad view.
-
-					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					params.addRule(RelativeLayout.CENTER_HORIZONTAL);
-					if (position.equals("bottom"))
-					{
-						Log.d("AdActivity","Bottom");
-						params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-					}
-					else
-					{
-						params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-					}
-
-					adContainer.addView(mAdView, params);
-
-					RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-					params2.addRule(RelativeLayout.CENTER_HORIZONTAL);
-
-					if (position.equals("bottom"))
-					{
-						Log.d("AdActivity","Bottom");
-						params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-						adContainer.setGravity(Gravity.BOTTOM);
-					}
-					else
-					{
-						params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-						adContainer.setGravity(Gravity.TOP);
-					}
-
-
-					mLayout.addView(adContainer,params2);
-
-					//if showBanner() has been called display the banner, else prevent it from appearing.
 					mAdView.setAdListener(new AdListener(){
 						@Override
 						public void onAdLoaded() {
+							Log.d("AdActivity","Banner - onAdLoaded: " + bannerVisible);
 							if (bannerVisible)
 							{
 								mAdView.setVisibility(View.GONE);
@@ -319,8 +283,6 @@ public class AdActivity extends GameActivity {
 							{
 								mAdView.setVisibility(View.GONE);
 							}
-							Log.d("AdActivity","Banner - onAdLoaded: " + bannerVisible);
-							bannerHasFinishedLoading = true;
 						}
 
 						@Override
@@ -335,6 +297,46 @@ public class AdActivity extends GameActivity {
 
 						}
 					});
+
+
+                    adRequest = new AdRequest.Builder().build();
+                    adContainer = new RelativeLayout(mSingleton);
+
+					// Place the ad view.
+                    //
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+					Log.d("AdActivity", position);
+					if (position.equals("bottom"))
+					{
+						params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+					}
+					else
+					{
+						params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+					}
+
+					adContainer.addView(mAdView, params);
+
+					RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					params2.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+					if (position.equals("bottom"))
+					{
+						params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+						adContainer.setGravity(Gravity.BOTTOM);
+					}
+					else
+					{
+						params2.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+						adContainer.setGravity(Gravity.TOP);
+					}
+
+
+					mLayout.addView(adContainer,params2);
+
+					//if showBanner() has been called display the banner, else prevent it from appearing.
 					hasBanner = true;
 					bannerCreated = true;
 					Log.d("AdActivity", "Banner Created.");
@@ -369,7 +371,7 @@ public class AdActivity extends GameActivity {
 			public void run()
 			{
 
-				if (hasBanner && bannerHasFinishedLoading)
+				if (hasBanner)
 				{
 					mAdView.setVisibility(View.GONE);
 					Log.d("AdActivity", "Banner Hidden");
@@ -381,7 +383,7 @@ public class AdActivity extends GameActivity {
 
 	public void showBanner()
 	{
-		Log.d("AdActivity", "showBanner: hasBanner = " + hasBanner + ", bannerHasFinishedLoading = " + bannerHasFinishedLoading);
+		Log.d("AdActivity", "showBanner: hasBanner = " + hasBanner);
 
 		runOnUiThread(new Runnable()
 		{
@@ -389,7 +391,7 @@ public class AdActivity extends GameActivity {
 			public void run()
 			{
 
-				if (hasBanner && bannerHasFinishedLoading)
+				if (hasBanner)
 				{
 					mAdView.loadAd(adRequest);
 					mAdView.setVisibility(View.VISIBLE);
