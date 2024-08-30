@@ -10,7 +10,7 @@ android {
         applicationId project.properties["app.application_id"]
         versionCode project.properties["app.version_code"].toInteger()
         versionName project.properties["app.version_name"]
-        minSdk 19
+        minSdk 21
         compileSdk 34
         targetSdk 34
 
@@ -81,7 +81,7 @@ dependencies {
 
     if (project.hasProperty("flamendless.admob"))
     {
-        implementation 'com.google.android.gms:play-services-ads:22.6.0'
+        implementation("com.google.android.gms:play-services-ads:23.3.0")
         implementation 'com.google.code.gson:gson:2.8.4'
         implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
     }
