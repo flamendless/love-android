@@ -16,7 +16,7 @@ android {
         externalNativeBuild {
             ndkBuild {
                 arguments "-j2"
-                // arguments "EXT_ADMOB=yes"
+                arguments "EXT_ADMOB=yes"
             }
         }
         ndk {
